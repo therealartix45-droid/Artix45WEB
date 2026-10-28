@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elartix45 Web | Portal de Contenidos, Descargas y Videos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            accent: '#06b6d4',
+                            neon: '#22d3ee',
+                            dark: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080c14;
+            color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+        .glow-avatar {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.6), 0 0 30px rgba(147, 51, 234, 0.3);
+        }
+    </style>
+</head>
+<body class="custom-scrollbar min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo (image 1000044609.jpg) & Name -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+                    <div class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-400 glow-avatar transform transition hover:scale-105 flex-shrink-0 bg-gray-900">
+                        <img src="1000044609.jpg" alt="Elartix45 Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0f172a/22d3ee?text=E45';">
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400">
+                            Elartix45
+                        </span>
+                        <span class="text-xs font-semibold text-cyan-400 block -mt-1 tracking-widest uppercase">Web Portal</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links (Desktop) -->
+                <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-gray-300">
+                    <button onclick="scrollToSection('hero')" class="hover:text-cyan-400 transition flex items-center gap-2">
+                        <i class="fas fa-house text-xs"></i> Inicio
+                    </button>
+                    <button onclick="scrollToSection('postsSection')" class="hover:text-cyan-400 transition flex items-center gap-2">
+                        <i class="fas fa-folder-open text-xs"></i> Publicaciones
+                    </button>
+                    <button onclick="scrollToSection('pollSection')" class="hover:text-cyan-400 transition flex items-center gap-2">
+                        <i class="fas fa-poll-h text-xs"></i> Votaciones
+                    </button>
+                </nav>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex flex-1 max-w-xs lg:max-w-md mx-4">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                            <i class="fas fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" id="searchInput" oninput="handleSearch()" 
+                            placeholder="Buscar juegos, mods, zip, videos..." 
+                            class="w-full pl-10 pr-4 py-2 bg-gray-900/90 text-sm text-gray-200 placeholder-gray-500 rounded-xl border border-gray-700/80 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+                </div>
+
+                <!-- Auth / Admin Control Section -->
+                <div id="authNavContainer" class="flex items-center space-x-3">
+                    <!-- Dynamic rendering based on login status -->
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="pb-4 md:hidden">
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </div>
+                    <input type="text" id="searchInputMobile" oninput="handleSearchMobile()" 
+                        placeholder="Buscar publicaciones..." 
+                        class="w-full pl-10 pr-4 py-2 bg-gray-900/90 text-sm text-gray-200 placeholder-gray-500 rounded-xl border border-gray-700/80 focus:outline-none focus:border-cyan-500">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO / BANNER SECTION -->
+    <section id="hero" class="relative overflow-hidden py-10 bg-gradient-to-b from-gray-900 via-brand-dark to-brand-dark border-b border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <div id="adminBadge" class="hidden mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">
+                <i class="fas fa-user-shield"></i> Modo Administrador Activo
+            </div>
+
+            <div class="flex justify-center mb-4">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-cyan-950/80 text-cyan-400 border border-cyan-800/50">
+                    <i class="fas fa-bolt text-yellow-400"></i> Repositorio Oficial & Entretenimiento
+                </span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                Bienvenido a <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-400 to-fuchsia-400">Elartix45 Web</span>
+            </h1>
+            <p class="mt-3 text-xs sm:text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                Descarga Mods, Juegos, Archivos ZIP/7z de Mediafire, Mega y Google Drive, mira los últimos videos y vota en la comunidad.
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-12">
+
+        <!-- COMMUNITY POLL SECTION -->
+        <section id="pollSection" class="glass-panel p-6 rounded-2xl border border-cyan-500/20 shadow-xl relative overflow-hidden">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-gray-800 pb-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                        <i class="fas fa-poll-h"></i> Encuesta Oficial de la Comunidad
+                    </span>
+                    <h2 id="pollQuestion" class="text-lg sm:text-xl font-extrabold text-white mt-1">¿Qué contenido quieres ver en la próxima publicación?</h2>
+                </div>
+                <div id="pollAdminControls" class="hidden">
+                    <button onclick="openPollAdminModal()" class="px-3.5 py-2 bg-gray-800 hover:bg-gray-700 text-yellow-400 border border-yellow-500/30 rounded-xl text-xs font-semibold flex items-center gap-2 shadow">
+                        <i class="fas fa-cog"></i> Configurar Votación
+                    </button>
+                </div>
+            </div>
+
+            <div id="pollOptionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Poll options rendered here -->
+            </div>
+            
+            <div class="mt-5 flex justify-between items-center text-xs text-gray-500 pt-2 border-t border-gray-800/60">
+                <span id="pollTotalVotes"><i class="fas fa-users mr-1"></i> 0 votos totales</span>
+                <span id="pollUserStatus" class="text-cyan-400 font-medium"></span>
+            </div>
+        </section>
+
+        <!-- CATEGORY FILTERS & POSTS SECTION -->
+        <section id="postsSection">
+            <div class="flex items-center justify-between mb-4 overflow-x-auto pb-2 custom-scrollbar">
+                <div class="flex space-x-2" id="categoryContainer"></div>
+            </div>
+
+            <!-- PUBLICATIONS HEADER -->
+            <div class="flex items-center justify-between mb-6">
+                <h2 id="sectionTitle" class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-fire text-orange-500"></i> Publicaciones Recientes
+                </h2>
+                <span id="postCount" class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-800 text-gray-400 border border-gray-700/60">
+                    0 resultados
+                </span>
+            </div>
+
+            <!-- GRID OF POSTS -->
+            <div id="postsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+            <!-- EMPTY STATE MESSAGE -->
+            <div id="emptyState" class="hidden text-center py-16 bg-gray-900/40 rounded-2xl border border-gray-800/80 my-6">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/80 flex items-center justify-center text-gray-500 text-2xl">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-300">No se encontraron publicaciones</h3>
+                <p class="text-sm text-gray-500 mt-1">Intenta con otro término de búsqueda o agrega un nuevo contenido.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-950 border-t border-gray-800/80 py-8 mt-12 text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-cyan-400/80">
+                    <img src="1000044609.jpg" alt="Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0f172a/22d3ee?text=E45';">
+                </div>
+                <span class="font-bold text-gray-200">Elartix45 Web</span>
+                <span class="text-xs text-gray-600">| Todos los derechos reservados.</span>
+            </div>
+            <div class="flex items-center space-x-6 text-xs text-gray-400">
+                <a href="#" class="hover:text-cyan-400 transition"><i class="fab fa-youtube text-lg mr-1 text-red-500"></i> YouTube</a>
+                <a href="#" class="hover:text-cyan-400 transition"><i class="fab fa-discord text-lg mr-1 text-indigo-400"></i> Discord</a>
+                <a href="#" class="hover:text-cyan-400 transition"><i class="fab fa-tiktok text-lg mr-1 text-pink-500"></i> TikTok</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: LOGIN ADMIN -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl border border-gray-700/80 shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-lock text-cyan-400"></i> Acceso Administrador
+                </h3>
+                <button onclick="closeLoginModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="handleLogin(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Contraseña de Admin</label>
+                    <input type="password" id="loginPassword" required placeholder="Ingresa la contraseña..." 
+                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <div id="loginError" class="hidden text-xs text-red-400 bg-red-950/50 p-2.5 rounded-lg border border-red-800/50">
+                    Contraseña incorrecta. Inténtalo de nuevo.
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeLoginModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-semibold">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-sm font-bold shadow-lg">
+                        Ingresar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT PUBLICATION -->
+    <div id="postModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-2xl border border-gray-700/80 shadow-2xl overflow-hidden my-8">
+            <div class="px-6 py-4 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
+                <h3 id="modalFormTitle" class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-cloud-arrow-up text-cyan-400"></i> Publicar en Elartix45 Web
+                </h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="uploadForm" onsubmit="savePost(event)" class="p-6 space-y-4">
+                <input type="hidden" id="editingPostId">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Título de la publicación *</label>
+                        <input type="text" id="postTitle" required placeholder="Ej: Pack Shaders HD Minecraft 1.20" 
+                            class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Categoría *</label>
+                        <select id="postCategory" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                            <option value="Juegos">Juegos</option>
+                            <option value="Mods">Mods</option>
+                            <option value="Programas">Programas</option>
+                            <option value="Videos">Videos</option>
+                            <option value="Tutoriales">Tutoriales</option>
+                            <option value="Archivos ZIP/7z">Archivos ZIP/7z</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Descripción o Instrucciones *</label>
+                    <textarea id="postDescription" rows="3" required placeholder="Escribe detalles del archivo, como instalar o requisitos..." 
+                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 custom-scrollbar"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">URL de Portada / Imagen (Opcional)</label>
+                    <input type="url" id="postImage" placeholder="https://ejemplo.com/imagen.jpg" 
+                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Formato de Archivo</label>
+                        <select id="postFileFormat" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                            <option value=".zip">.ZIP</option>
+                            <option value=".7z">.7Z</option>
+                            <option value=".rar">.RAR</option>
+                            <option value=".exe">.EXE / App</option>
+                            <option value="Online">N/A (Video / Link)</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Link de Descarga (Mediafire, Mega, Drive) *</label>
+                        <input type="url" id="postDownloadUrl" required placeholder="https://www.mediafire.com/file/..." 
+                            class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Enlace de Video (YouTube - Opcional)</label>
+                    <input type="url" id="postVideoUrl" placeholder="https://www.youtube.com/watch?v=XXXXXX" 
+                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-800">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-semibold">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg">
+                        Guardar Publicación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT POLL ADMIN -->
+    <div id="pollAdminModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg rounded-2xl border border-gray-700/80 shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-poll text-yellow-400"></i> Configurar Encuesta
+                </h3>
+                <button onclick="closePollAdminModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="savePollAdmin(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Pregunta de la Encuesta</label>
+                    <input type="text" id="pollAdminQuestion" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-gray-300">Opciones de Respuesta</label>
+                    <input type="text" id="pollOpt0" required placeholder="Opción 1" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <input type="text" id="pollOpt1" required placeholder="Opción 2" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <input type="text" id="pollOpt2" placeholder="Opción 3 (opcional)" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <input type="text" id="pollOpt3" placeholder="Opción 4 (opcional)" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-gray-800">
+                    <button type="button" onclick="resetPollVotes()" class="px-3 py-2 bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/50 rounded-xl text-xs font-semibold">
+                        <i class="fas fa-undo mr-1"></i> Reiniciar Votos
+                    </button>
+                    <div class="flex space-x-2">
+                        <button type="button" onclick="closePollAdminModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-semibold">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: SETTINGS / CHANGE PASSWORD -->
+    <div id="settingsModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl border border-gray-700/80 shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-key text-yellow-400"></i> Cambiar Contraseña de Admin
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="handleChangePassword(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Nueva Contraseña</label>
+                    <input type="password" id="newPassword" required minlength="4" placeholder="Mínimo 4 caracteres..." 
+                        class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <div id="settingsSuccess" class="hidden text-xs text-emerald-400 bg-emerald-950/50 p-2.5 rounded-lg border border-emerald-800/50">
+                    ¡Contraseña actualizada con éxito!
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeSettingsModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-semibold">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg">
+                        Actualizar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: VIDEO PLAYER -->
+    <div id="videoModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-4xl rounded-2xl border border-gray-800 overflow-hidden shadow-2xl relative">
+            <div class="flex items-center justify-between px-6 py-3 bg-gray-900 border-b border-gray-800">
+                <h4 id="videoModalTitle" class="text-sm font-bold text-white truncate max-w-md">Reproductor de Video</h4>
+                <button onclick="closeVideoModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="relative aspect-video w-full bg-black">
+                <iframe id="videoIframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const DEFAULT_POSTS = [
+            {
+                id: 'post-1',
+                title: 'Pack de Texturas HD Minecraft 1.20',
+                category: 'Mods',
+                description: 'Pack completo de texturas hiperrealistas para Minecraft con compatibilidad Shaders. Archivo optimizado .ZIP para Mediafire.',
+                image: '1000044609.jpg',
+                downloadUrl: 'https://www.mediafire.com',
+                fileFormat: '.zip',
+                videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                clicks: 184,
+                comments: [
+                    { id: 'c1', author: 'CraftGamer', text: '¡Increíble pack, funciona perfecto en 1.20!', date: '18/10/2026 14:20' }
+                ],
+                createdAt: new Date().toLocaleDateString('es-ES')
+            },
+            {
+                id: 'post-2',
+                title: 'Optimizador FPS y Limpiador RAM PC',
+                category: 'Programas',
+                description: 'Software ejecutable y portátil en comprimido 7Z para acelerar juegos y eliminar archivos basura del sistema.',
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
+                downloadUrl: 'https://mega.nz',
+                fileFormat: '.7z',
+                videoUrl: '',
+                clicks: 95,
+                comments: [],
+                createdAt: new Date().toLocaleDateString('es-ES')
+            }
+        ];
+
+        const DEFAULT_POLL = {
+            question: '¿Qué tipo de contenido prefieres para la próxima semana?',
+            options: [
+                { text: 'Mods de Minecraft / GTA V', votes: 24 },
+                { text: 'Juegos Livianos PC / Android', votes: 31 },
+                { text: 'Programas de Edición & Utilidades', votes: 12 },
+                { text: 'Tutoriales paso a paso', votes: 18 }
+            ]
+        };
+
+        const CATEGORIES = ['Todos', 'Juegos', 'Mods', 'Programas', 'Videos', 'Tutoriales', 'Archivos ZIP/7z', 'Otros'];
+
+        let posts = [];
+        let poll = DEFAULT_POLL;
+        let currentCategory = 'Todos';
+        let searchQuery = '';
+        let isAdminLoggedIn = false;
+        let adminPassword = 'artix123';
+        let openCommentsPostId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            loadPostsFromStorage();
+            loadPollFromStorage();
+            renderAuthNav();
+            renderCategories();
+            renderPoll();
+            renderPosts();
+        });
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function loadSettings() {
+            const savedPass = localStorage.getItem('elartix45_admin_pass');
+            if (savedPass) adminPassword = savedPass;
+
+            const sessionAuth = sessionStorage.getItem('elartix45_is_admin');
+            if (sessionAuth === 'true') isAdminLoggedIn = true;
+        }
+
+        function loadPostsFromStorage() {
+            const saved = localStorage.getItem('elartix45_posts');
+            if (saved) {
+                try { posts = JSON.parse(saved); } catch (e) { posts = DEFAULT_POSTS; }
+            } else {
+                posts = DEFAULT_POSTS;
+                savePostsToStorage();
+            }
+        }
+
+        function savePostsToStorage() {
+            localStorage.setItem('elartix45_posts', JSON.stringify(posts));
+        }
+
+        function loadPollFromStorage() {
+            const saved = localStorage.getItem('elartix45_poll');
+            if (saved) {
+                try { poll = JSON.parse(saved); } catch (e) { poll = DEFAULT_POLL; }
+            } else {
+                poll = DEFAULT_POLL;
+                savePollToStorage();
+            }
+        }
+
+        function savePollToStorage() {
+            localStorage.setItem('elartix45_poll', JSON.stringify(poll));
+        }
+
+        function renderAuthNav() {
+            const container = document.getElementById('authNavContainer');
+            const adminBadge = document.getElementById('adminBadge');
+            const pollAdminControls = document.getElementById('pollAdminControls');
+
+            if (isAdminLoggedIn) {
+                adminBadge.classList.remove('hidden');
+                pollAdminControls.classList.remove('hidden');
+                container.innerHTML = `
+                    <button onclick="openModal()" class="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-semibold px-4 py-2 rounded-xl shadow-lg text-xs sm:text-sm">
+                        <i class="fas fa-plus-circle"></i>
+                        <span class="hidden sm:inline">Nueva Publicación</span>
+                    </button>
+                    <button onclick="openSettingsModal()" title="Ajustes Admin" class="p-2 bg-gray-800 hover:bg-gray-700 text-yellow-400 rounded-xl text-sm">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button onclick="handleLogout()" title="Cerrar Sesión" class="p-2 bg-gray-800 hover:bg-red-900/50 text-gray-400 hover:text-red-400 rounded-xl text-sm">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                `;
+            } else {
+                adminBadge.classList.add('hidden');
+                pollAdminControls.classList.add('hidden');
+                container.innerHTML = `
+                    <button onclick="openLoginModal()" class="flex items-center space-x-2 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition">
+                        <i class="fas fa-lock text-cyan-400"></i>
+                        <span>Acceso Admin</span>
+                    </button>
+                `;
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const passInput = document.getElementById('loginPassword').value;
+            const errorMsg = document.getElementById('loginError');
+
+            if (passInput === adminPassword) {
+                isAdminLoggedIn = true;
+                sessionStorage.setItem('elartix45_is_admin', 'true');
+                errorMsg.classList.add('hidden');
+                closeLoginModal();
+                renderAuthNav();
+                renderPosts();
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem('elartix45_is_admin');
+            renderAuthNav();
+            renderPosts();
+        }
+
+        function handleChangePassword(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('newPassword').value.trim();
+            if (newPass) {
+                adminPassword = newPass;
+                localStorage.setItem('elartix45_admin_pass', newPass);
+                const successMsg = document.getElementById('settingsSuccess');
+                successMsg.classList.remove('hidden');
+                setTimeout(() => {
+                    successMsg.classList.add('hidden');
+                    closeSettingsModal();
+                }, 1500);
+            }
+        }
+
+        function renderPoll() {
+            document.getElementById('pollQuestion').textContent = poll.question;
+            const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+            document.getElementById('pollTotalVotes').innerHTML = `<i class="fas fa-users mr-1"></i> ${totalVotes} votos totales`;
+
+            const userVoted = localStorage.getItem('elartix45_voted_poll');
+            const userStatus = document.getElementById('pollUserStatus');
+            userStatus.textContent = userVoted !== null ? '✓ Ya has registrado tu voto' : 'Puedes elegir tu opción favorita';
+
+            const container = document.getElementById('pollOptionsContainer');
+            container.innerHTML = poll.options.map((opt, index) => {
+                const pct = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+                return `
+                    <div onclick="votePoll(${index})" class="group cursor-pointer p-3.5 rounded-xl bg-gray-900/90 border border-gray-800 hover:border-cyan-500/50 transition relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 bg-cyan-950/40 border-r border-cyan-500/30 transition-all duration-500" style="width: ${pct}%"></div>
+                        <div class="relative z-10 flex items-center justify-between text-xs sm:text-sm font-semibold">
+                            <span class="text-gray-200 group-hover:text-white flex items-center gap-2">
+                                <i class="${userVoted == index ? 'fas fa-check-circle text-cyan-400' : 'far fa-circle text-gray-500'}"></i>
+                                ${opt.text}
+                            </span>
+                            <span class="text-cyan-400 font-bold ml-2">${pct}% (${opt.votes})</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function votePoll(index) {
+            const hasVoted = localStorage.getItem('elartix45_voted_poll');
+            if (hasVoted !== null) {
+                alert('Ya registraste tu voto para esta encuesta.');
+                return;
+            }
+            poll.options[index].votes += 1;
+            localStorage.setItem('elartix45_voted_poll', index);
+            savePollToStorage();
+            renderPoll();
+        }
+
+        function openPollAdminModal() {
+            document.getElementById('pollAdminQuestion').value = poll.question;
+            for (let i = 0; i < 4; i++) {
+                document.getElementById(`pollOpt${i}`).value = poll.options[i] ? poll.options[i].text : '';
+            }
+            document.getElementById('pollAdminModal').classList.remove('hidden');
+        }
+
+        function closePollAdminModal() { document.getElementById('pollAdminModal').classList.add('hidden'); }
+
+        function savePollAdmin(e) {
+            e.preventDefault();
+            const q = document.getElementById('pollAdminQuestion').value.trim();
+            const opts = [];
+            for (let i = 0; i < 4; i++) {
+                const val = document.getElementById(`pollOpt${i}`).value.trim();
+                if (val) {
+                    const existingVotes = poll.options[i] ? poll.options[i].votes : 0;
+                    opts.push({ text: val, votes: existingVotes });
+                }
+            }
+            if (opts.length < 2) {
+                alert('Ingresa al menos 2 opciones para la encuesta.');
+                return;
+            }
+            poll = { question: q, options: opts };
+            savePollToStorage();
+            renderPoll();
+            closePollAdminModal();
+        }
+
+        function resetPollVotes() {
+            if (confirm('¿Deseas reiniciar el contador de votos a cero?')) {
+                poll.options.forEach(o => o.votes = 0);
+                localStorage.removeItem('elartix45_voted_poll');
+                savePollToStorage();
+                renderPoll();
+                closePollAdminModal();
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = CATEGORIES.map(cat => {
+                const isActive = cat === currentCategory;
+                const activeClasses = isActive 
+                    ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-bold shadow-lg shadow-cyan-500/20 border-transparent' 
+                    : 'bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800 border-gray-800';
+
+                return `<button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition border ${activeClasses}">${cat}</button>`;
+            }).join('');
+        }
+
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            renderCategories();
+            renderPosts();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            renderPosts();
+        }
+
+        function handleSearchMobile() {
+            searchQuery = document.getElementById('searchInputMobile').value.toLowerCase();
+            renderPosts();
+        }
+
+        function renderPosts() {
+            const grid = document.getElementById('postsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const postCount = document.getElementById('postCount');
+            const sectionTitle = document.getElementById('sectionTitle');
+
+            const filtered = posts.filter(post => {
+                const matchesCategory = (currentCategory === 'Todos') || 
+                    (currentCategory === 'Archivos ZIP/7z' ? (post.fileFormat === '.zip' || post.fileFormat === '.7z' || post.category === 'Archivos ZIP/7z') : post.category === currentCategory);
+                const matchesSearch = post.title.toLowerCase().includes(searchQuery) || post.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            postCount.textContent = `${filtered.length} publicaciones`;
+            sectionTitle.innerHTML = `<i class="fas fa-fire text-orange-500"></i> ${currentCategory === 'Todos' ? 'Publicaciones Recientes' : currentCategory}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(post => {
+                const defaultImg = '1000044609.jpg';
+                
+                let hostBadge = 'Descargar';
+                let hostColor = 'bg-indigo-600 hover:bg-indigo-500';
+                if (post.downloadUrl.includes('mediafire')) { hostBadge = 'Mediafire'; hostColor = 'bg-blue-600 hover:bg-blue-500'; }
+                else if (post.downloadUrl.includes('mega')) { hostBadge = 'Mega'; hostColor = 'bg-red-600 hover:bg-red-500'; }
+                else if (post.downloadUrl.includes('drive')) { hostBadge = 'Google Drive'; hostColor = 'bg-emerald-600 hover:bg-emerald-500'; }
+
+                const commentsList = post.comments || [];
+                const isCommentsOpen = openCommentsPostId === post.id;
+
+                return `
+                    <div class="glass-panel rounded-2xl overflow-hidden flex flex-col justify-between border border-gray-800 hover:border-gray-700 transition duration-300 group">
+                        <div>
+                            <div class="relative h-48 w-full bg-gray-900 overflow-hidden">
+                                <img src="${post.image || defaultImg}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/0f172a/22d3ee?text=Elartix45+Web';">
+                                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-bold bg-gray-950/80 text-cyan-400 border border-gray-800 backdrop-blur-md">${post.category}</span>
+                                <span class="absolute top-3 right-3 px-2 py-1 rounded-md text-xs font-extrabold bg-yellow-500 text-gray-950 uppercase shadow">${post.fileFormat || '.zip'}</span>
+                                ${post.videoUrl ? `
+                                    <button onclick="openVideoModal('${post.videoUrl}', '${escapeQuotes(post.title)}')" class="absolute inset-0 m-auto w-12 h-12 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition hover:scale-110">
+                                        <i class="fas fa-play text-lg ml-0.5"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+
+                            <div class="p-5">
+                                <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition line-clamp-1 mb-2">${post.title}</h3>
+                                <p class="text-xs text-gray-400 line-clamp-3 mb-4 leading-relaxed">${post.description}</p>
+
+                                <div class="flex items-center justify-between text-xs text-gray-500 mb-4 pt-3 border-t border-gray-800">
+                                    <span><i class="far fa-clock mr-1"></i>${post.createdAt || 'Reciente'}</span>
+                                    <span><i class="fas fa-download mr-1"></i>${post.clicks || 0} descargas</span>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-2">
+                                    <a href="${post.downloadUrl}" target="_blank" rel="noopener" onclick="registerClick('${post.id}')"
+                                        class="w-full py-2.5 px-3 rounded-xl ${hostColor} text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                                        <i class="fas fa-download"></i> Descargar (${hostBadge})
+                                    </a>
+
+                                    <button onclick="toggleComments('${post.id}')" class="w-full py-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                                        <i class="fas fa-comments text-cyan-400"></i> Comentarios (${commentsList.length})
+                                    </button>
+
+                                    ${isAdminLoggedIn ? `
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <button onclick="editPost('${post.id}')" class="flex-1 py-1.5 bg-gray-800 hover:bg-gray-700 text-cyan-400 rounded-lg text-xs font-semibold">
+                                                <i class="fas fa-edit mr-1"></i> Editar
+                                            </button>
+                                            <button onclick="deletePost('${post.id}')" class="px-3 py-1.5 bg-gray-800 hover:bg-red-900/50 text-red-400 rounded-lg text-xs font-semibold">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COMMENTS SECTION SLIDE DOWN -->
+                        ${isCommentsOpen ? `
+                            <div class="p-4 bg-gray-950/90 border-t border-gray-800 text-xs">
+                                <h4 class="font-bold text-gray-300 mb-3 flex items-center justify-between">
+                                    <span>Comentarios</span>
+                                    <button onclick="toggleComments('${post.id}')" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+                                </h4>
+                                
+                                <div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar mb-3 pr-1">
+                                    ${commentsList.length === 0 ? '<p class="text-gray-600 text-center py-2">Sé el primero en comentar.</p>' : ''}
+                                    ${commentsList.map(c => `
+                                        <div class="p-2.5 rounded-lg bg-gray-900 border border-gray-800 relative group/c">
+                                            <div class="flex justify-between items-center text-[11px] text-cyan-400 mb-1 font-bold">
+                                                <span>${escapeQuotes(c.author)}</span>
+                                                <span class="text-gray-500 font-normal">${c.date}</span>
+                                            </div>
+                                            <p class="text-gray-300 leading-snug">${escapeQuotes(c.text)}</p>
+                                            ${isAdminLoggedIn ? `
+                                                <button onclick="deleteComment('${post.id}', '${c.id}')" title="Borrar comentario" class="absolute top-1 right-1 p-1 text-red-400 hover:text-red-300 opacity-80 hover:opacity-100">
+                                                    <i class="fas fa-trash text-[10px]"></i>
+                                                </button>
+                                            ` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+
+                                <form onsubmit="addComment(event, '${post.id}')" class="space-y-2">
+                                    <input type="text" id="commentAuthor-${post.id}" required placeholder="Tu Nombre / Nickname" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                    <div class="flex gap-2">
+                                        <input type="text" id="commentText-${post.id}" required placeholder="Escribe tu mensaje..." class="flex-1 bg-gray-900 border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                        <button type="submit" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-bold text-xs">Enviar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleComments(postId) {
+            openCommentsPostId = openCommentsPostId === postId ? null : postId;
+            renderPosts();
+        }
+
+        function addComment(e, postId) {
+            e.preventDefault();
+            const author = document.getElementById(`commentAuthor-${postId}`).value.trim();
+            const text = document.getElementById(`commentText-${postId}`).value.trim();
+
+            if (!author || !text) return;
+
+            const postIndex = posts.findIndex(p => p.id === postId);
+            if (postIndex !== -1) {
+                if (!posts[postIndex].comments) posts[postIndex].comments = [];
+                posts[postIndex].comments.push({
+                    id: 'c-' + Date.now(),
+                    author: author,
+                    text: text,
+                    date: new Date().toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' })
+                });
+                savePostsToStorage();
+                renderPosts();
+            }
+        }
+
+        function deleteComment(postId, commentId) {
+            if (confirm('¿Borrar este comentario?')) {
+                const postIndex = posts.findIndex(p => p.id === postId);
+                if (postIndex !== -1) {
+                    posts[postIndex].comments = posts[postIndex].comments.filter(c => c.id !== commentId);
+                    savePostsToStorage();
+                    renderPosts();
+                }
+            }
+        }
+
+        function registerClick(postId) {
+            const index = posts.findIndex(p => p.id === postId);
+            if (index !== -1) {
+                posts[index].clicks = (posts[index].clicks || 0) + 1;
+                savePostsToStorage();
+                renderPosts();
+            }
+        }
+
+        function openModal(editingId = null) {
+            document.getElementById('postModal').classList.remove('hidden');
+            if (!editingId) {
+                document.getElementById('modalFormTitle').innerHTML = '<i class="fas fa-plus-circle text-cyan-400"></i> Nueva Publicación';
+                document.getElementById('uploadForm').reset();
+                document.getElementById('editingPostId').value = '';
+            }
+        }
+
+        function closeModal() { document.getElementById('postModal').classList.add('hidden'); }
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        function openSettingsModal() { document.getElementById('settingsModal').classList.remove('hidden'); }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
+
+        function editPost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('modalFormTitle').innerHTML = '<i class="fas fa-edit text-cyan-400"></i> Editar Publicación';
+            document.getElementById('editingPostId').value = post.id;
+            document.getElementById('postTitle').value = post.title;
+            document.getElementById('postCategory').value = post.category;
+            document.getElementById('postDescription').value = post.description;
+            document.getElementById('postImage').value = post.image || '';
+            document.getElementById('postFileFormat').value = post.fileFormat || '.zip';
+            document.getElementById('postDownloadUrl').value = post.downloadUrl;
+            document.getElementById('postVideoUrl').value = post.videoUrl || '';
+
+            openModal(postId);
+        }
+
+        function savePost(event) {
+            event.preventDefault();
+            const editingId = document.getElementById('editingPostId').value;
+
+            const postData = {
+                title: document.getElementById('postTitle').value.trim(),
+                category: document.getElementById('postCategory').value,
+                description: document.getElementById('postDescription').value.trim(),
+                image: document.getElementById('postImage').value.trim(),
+                fileFormat: document.getElementById('postFileFormat').value,
+                downloadUrl: document.getElementById('postDownloadUrl').value.trim(),
+                videoUrl: document.getElementById('postVideoUrl').value.trim(),
+            };
+
+            if (editingId) {
+                const index = posts.findIndex(p => p.id === editingId);
+                if (index !== -1) {
+                    posts[index] = { ...posts[index], ...postData };
+                }
+            } else {
+                const newPost = {
+                    id: 'post-' + Date.now(),
+                    ...postData,
+                    clicks: 0,
+                    comments: [],
+                    createdAt: new Date().toLocaleDateString('es-ES')
+                };
+                posts.unshift(newPost);
+            }
+
+            savePostsToStorage();
+            renderPosts();
+            closeModal();
+            document.getElementById('uploadForm').reset();
+        }
+
+        function deletePost(postId) {
+            if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+                posts = posts.filter(p => p.id !== postId);
+                savePostsToStorage();
+                renderPosts();
+            }
+        }
+
+        function openVideoModal(url, title) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            document.getElementById('videoModalTitle').textContent = title || 'Reproductor de Video';
+
+            let embedUrl = url;
+            if (url.includes('youtube.com/watch?v=')) {
+                const videoId = url.split('v=')[1]?.split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            } else if (url.includes('youtu.be/')) {
+                const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            }
+
+            iframe.src = embedUrl;
+            modal.classList.remove('hidden');
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoIframe').src = '';
+            document.getElementById('videoModal').classList.add('hidden');
+        }
+
+        function escapeQuotes(str) {
+            return str ? str.replace(/'/g, "\\'").replace(/"/g, '&quot;') : '';
+        }
+    </script>
+</body>
+</html>
